@@ -1,4 +1,3 @@
--- Job Market Analysis 
 -- Database Schema
 CREATE TABLE IF NOT EXISTS company (
     company_id INTEGER PRIMARY KEY, company_name VARCHAR(255),
@@ -33,3 +32,4 @@ CREATE INDEX IF NOT EXISTS idx_jp_location ON job_posting(location_id);
 CREATE INDEX IF NOT EXISTS idx_jp_date     ON job_posting(job_posting_date);
 CREATE INDEX IF NOT EXISTS idx_jp_level    ON job_posting(job_posting_level);
 CREATE INDEX IF NOT EXISTS idx_jps_skill   ON job_posting_skills(skill_id);
+
