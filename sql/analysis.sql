@@ -1,5 +1,3 @@
--- Key Analysis Queries
-
 -- 1. Year-over-Year Growth
 WITH yearly AS (
     SELECT EXTRACT(YEAR FROM job_posting_date) AS yr, 
@@ -57,4 +55,5 @@ FROM
 LEFT JOIN company 
     ON job_posting.company_id = company.company_id
 WHERE job_posting.maximum_pay IS NOT NULL
+
 ORDER BY diff DESC NULLS LAST;
