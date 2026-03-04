@@ -40,8 +40,12 @@ job_market_project/
 pip install -r requirements.txt
 ```
 
-### 2. Set up PostgreSQL
-Run `sql/schema.sql` to create all tables and indexes.
+### 2. Add the dataset
+
+1. Go to: https://www.kaggle.com/datasets/lukebarousse/data-analyst-job-postings-google-search
+2. Click **Download**
+3. Extract and place the CSV files in this `data/` folder
+4. Then run the notebook normally
 
 ### 3. Update settings in notebook
 ```python
@@ -52,7 +56,12 @@ DB_PASSWORD = 'your_postgres_password'
 ### 4. Run the notebook
 Open `notebooks/job_market_pipeline.ipynb` and run all cells!
 
+### 5. Set up PostgreSQL
+Run `sql/schema.sql` to create all tables and indexes.
+
 ## Key Results
+
+**Year-to-year growth**
 
 | Year | Jobs | Growth |
 |------|------|--------|
