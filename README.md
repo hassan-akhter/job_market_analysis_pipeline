@@ -11,15 +11,15 @@ This project builds a complete **ELT data pipeline** that ingests raw job postin
 ## Project Structure
 ```
 job_market_project/
-├── data/                           ← Raw CSV files (not uploaded — see note)
+├── data/                           -> Raw CSV files (not uploaded — see note)
 ├── notebooks/
-│   └── job_market_pipeline.ipynb   ← Main pipeline notebook (run this!)
+│   └── job_market_pipeline.ipynb   -> Main pipeline notebook (run this!)
 ├── sql/
-│   ├── schema.sql                  ← Database schema + indexes
-│   ├── views.sql                   ← 5 reusable analytics views
-│   └── analysis.sql                ← Key SQL queries
-├── visualizations/                        ← Generated charts
-├── docs/                           ← Portfolio documents
+│   ├── schema.sql                  -> Database schema + indexes
+│   ├── views.sql                   -> 5 reusable analytics views
+│   └── analysis.sql                -> Key SQL queries
+├── visualizations/                 -> Generated charts
+├── docs/                           -> Portfolio documents
 ├── requirements.txt
 └── README.md
 ```
