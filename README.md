@@ -19,7 +19,6 @@ job_market_project/
 │   ├── views.sql                   -> 5 reusable analytics views
 │   └── analysis.sql                -> Key SQL queries
 ├── visualizations/                 -> Generated charts
-├── docs/                           -> Portfolio documents
 ├── requirements.txt
 └── README.md
 ```
