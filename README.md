@@ -1,7 +1,7 @@
 #  Job Market Analysis — Pipeline
 
-> **End-to-end data pipeline analyzing 25,000+ job postings (2017-2021)**  
-> Built with Python, PostgreSQL, pandas, SQLAlchemy, dbt, matplotlib & seaborn
+**End-to-end data pipeline analyzing 25,000+ job postings (2017-2021)**  
+Built with Python, PostgreSQL, pandas, SQLAlchemy, dbt, matplotlib & seaborn
 
 ## Project Summary
 This project builds a complete **ELT data pipeline** that ingests raw job posting data, validates quality, transforms and cleans it, loads it into a PostgreSQL database, and delivers business insights through SQL analysis and visualizations.
