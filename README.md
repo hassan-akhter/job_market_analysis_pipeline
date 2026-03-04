@@ -63,7 +63,14 @@ Open `notebooks/job_market_pipeline.ipynb` and run all cells!
 | 2020 | 6,305 | +62.6% |
 | 2021 | 8,174 | +29.6% |
 
-**Top Skills:** cloud (8.6%), sql (8.4%), python (8.0%), aws (7.2%), agile (5.9%)
+**Top Skills:**
+
+cloud (8.6%), 
+sql (8.4%), 
+python (8.0%), 
+aws (7.2%), 
+agile (5.9%)
+
 ## Business Insights
 
 - 172.4% market growth over 5 years
