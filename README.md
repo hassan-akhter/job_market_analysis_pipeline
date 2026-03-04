@@ -9,7 +9,7 @@ This project builds a complete **ELT data pipeline** that ingests raw job postin
 **Key Finding:** The tech job market grew **172.4%** from 2017 to 2021, with Cloud, SQL and Python emerging as the top 3 most demanded skills across all industries.
 
 ## Project Structure
-
+```
 job_market_project/
 ├── data/                           ← Raw CSV files (not uploaded — see note)
 ├── notebooks/
@@ -22,7 +22,7 @@ job_market_project/
 ├── docs/                           ← Portfolio documents
 ├── requirements.txt
 └── README.md
-
+```
 ## Tech Stack
 
 | Tool | Purpose |
