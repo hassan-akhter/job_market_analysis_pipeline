@@ -1,4 +1,4 @@
-#  Job Market Analysis — Pipeline
+#  Job Market Analysis: Pipeline
 
 **End-to-end data pipeline analyzing 25,000+ job postings (2017-2021)**  
 Built with Python, PostgreSQL, pandas, SQLAlchemy, dbt, matplotlib & seaborn
