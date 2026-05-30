@@ -143,8 +143,3 @@ SELECT * FROM vw_salary_by_title;
 Raw CSV files are not included in this repo (see `.gitignore`).
 
 ---
-
-## Author
-
-**Hassan Akhter** — MSc Forest Information Technology (HNEE × SGGW · Erasmus+ Scholar)  
-[github.com/hassan-akhter](https://github.com/hassan-akhter) · [linkedin.com/in/hassanakhter122](https://linkedin.com/in/hassanakhter122)
