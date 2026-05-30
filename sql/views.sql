@@ -1,76 +1,81 @@
--- 5 Reusable Analytics Views
-CREATE OR REPLACE VIEW job_details AS
+-- View 1 — Year-over-year growth
+CREATE OR REPLACE VIEW vw_yearly_growth AS
 SELECT
-	company_name, 
-	company_industry, 
-	job_title,
-    job_posting_level, 
-	maximum_pay, 
-	minimum_pay, 
-	job_location
-FROM job_posting 
-LEFT JOIN company 
-	ON job_posting.company_id    = company.company_id
-LEFT JOIN job_title
-	ON job_posting.job_title_id  = job_title.job_title_id
-LEFT JOIN job_location ON job_posting.location_id  = job_location.location_id
-WHERE job_posting.maximum_pay IS NOT NULL;
-
-CREATE OR REPLACE VIEW skill_demand AS
-SELECT 
-	skill_name, 
-	COUNT(*) AS job_count,
-    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM job_posting), 1) || '%' AS demand_pct
-FROM job_posting 
-LEFT JOIN job_posting_skills 
-	ON job_posting.job_posting_id = job_posting_skills.job_posting_id
-LEFT JOIN skill  
-	ON job_posting_skills.skill_id = skill.skill_id
-WHERE skill.skill_name IS NOT NULL
-GROUP BY skill.skill_name 
-ORDER BY job_count DESC;
-
-CREATE OR REPLACE VIEW company_stats AS
-SELECT 
-	company_name, 
-	company_industry, 
-	COUNT(*) AS job_count,
-    ROUND(AVG(job_posting.maximum_pay)::NUMERIC, 0) AS avg_salary,
-    ROUND(MIN(job_posting.maximum_pay)::NUMERIC, 0) AS min_salary,
-    ROUND(MAX(job_posting.maximum_pay)::NUMERIC, 0) AS max_salary
+    job_year::int AS year,
+    COUNT(*) AS job_count,
+    LAG(COUNT(*)) OVER (ORDER BY job_year) AS prev_year_count,
+    ROUND(
+        (COUNT(*) - LAG(COUNT(*)) OVER (ORDER BY job_year))::numeric
+        / NULLIF(LAG(COUNT(*)) OVER (ORDER BY job_year), 0) * 100, 1
+    ) AS growth_pct
 FROM job_posting
-LEFT JOIN company ON job_posting.company_id = company.company_id
-WHERE job_posting.maximum_pay IS NOT NULL
-GROUP BY company_name, company_industry 
-ORDER BY avg_salary DESC;
+WHERE job_year BETWEEN 2017 AND 2021
+GROUP BY job_year
+ORDER BY job_year;
 
 
-CREATE OR REPLACE VIEW job_market_summary AS
-SELECT 
-	company_name, 
-	company_industry, 
-	job_location, 
-	job_title,
-    STRING_AGG(skill.skill_name, ', ') AS required_skills,
-    ROUND(AVG(job_posting.maximum_pay)::NUMERIC, 0) AS avg_salary
-FROM job_posting 
-LEFT JOIN company 
-	ON job_posting.company_id  = company.company_id
-LEFT JOIN job_title 
-	ON job_posting.job_title_id  = job_title.job_title_id
-LEFT JOIN job_location 
-	ON job_posting.location_id  = job_location.location_id
-LEFT JOIN job_posting_skills 
-	ON job_posting.job_posting_id = job_posting_skills.job_posting_id
-LEFT JOIN skill 
-	ON job_posting_skills.skill_id = skill.skill_id
-WHERE skill_name IS NOT NULL
-GROUP BY company.company_name, company.company_industry, job_location.job_location, job_title.job_title
-ORDER BY avg_salary DESC NULLS LAST;
-
-CREATE OR REPLACE VIEW high_paying_jobs AS
-SELECT * FROM company_stats 
-WHERE max_salary > 150000;
+-- View 2 — Skill demand ranking
+CREATE OR REPLACE VIEW vw_skill_demand AS
+SELECT
+    s.skill_name,
+    COUNT(*) AS mentions,
+    ROUND(COUNT(*) * 100.0 /
+          (SELECT COUNT(*) FROM job_posting_skills), 2) AS pct
+FROM job_posting_skills jps
+JOIN skill s ON jps.skill_id = s.skill_id
+GROUP BY s.skill_name
+ORDER BY mentions DESC;
 
 
+-- View 3 — Top skills per pay category
+CREATE OR REPLACE VIEW vw_skills_by_pay AS
+WITH ranked AS (
+    SELECT
+        jp.pay_category,
+        s.skill_name,
+        COUNT(*) AS mentions,
+        RANK() OVER (
+            PARTITION BY jp.pay_category
+            ORDER BY COUNT(*) DESC
+        )  AS rk
+    FROM job_posting jp
+    JOIN job_posting_skills jps ON jp.job_posting_id = jps.job_posting_id
+    JOIN skill s  ON jps.skill_id = s.skill_id
+    WHERE jp.pay_category IS NOT NULL
+    GROUP BY jp.pay_category, s.skill_name
+)
+SELECT pay_category, rk, skill_name, mentions
+FROM ranked
+WHERE rk <= 5
+ORDER BY pay_category, rk;
 
+
+-- View 4 — Monthly posting trend
+CREATE OR REPLACE VIEW vw_monthly_trend AS
+SELECT
+    job_year::int AS year,
+    job_month::int  AS month,
+    COUNT(*) AS job_count,
+    SUM(COUNT(*)) OVER (
+        PARTITION BY job_year ORDER BY job_month
+    ) AS cumulative_ytd
+FROM job_posting
+WHERE job_year BETWEEN 2017 AND 2021
+GROUP BY job_year, job_month
+ORDER BY job_year, job_month;
+
+
+-- View 5 — Salary summary by title
+CREATE OR REPLACE VIEW vw_salary_by_title AS
+SELECT
+    jt.job_title,
+    COUNT(*) AS postings,
+    ROUND(AVG(jp.minimum_pay)::numeric, 0) AS avg_min_pay,
+    ROUND(AVG(jp.maximum_pay)::numeric, 0) AS avg_max_pay,
+    ROUND(AVG(jp.maximum_pay - jp.minimum_pay)::numeric, 0) AS avg_range
+FROM job_posting jp
+JOIN job_title jt ON jp.job_title_id = jt.job_title_id
+WHERE jp.minimum_pay > 0
+  AND jp.maximum_pay > 0
+GROUP BY jt.job_title
+ORDER BY avg_max_pay DESC;
