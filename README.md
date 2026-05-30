@@ -27,7 +27,7 @@ Python · PostgreSQL · SQLAlchemy · pandas · matplotlib · seaborn
 job_market_analysis_pipeline/
 │
 ├── pipeline.py               ← Run this. Connects to PostgreSQL, runs all
-│                               queries, saves 9 charts to visualizations/
+│                               queries, saves 8 charts to visualizations/
 │
 ├── sql/
 │   ├── schema.sql            ← Table definitions + indexes (run once if
@@ -43,8 +43,7 @@ job_market_analysis_pipeline/
 │   ├── 05_top_companies.png
 │   ├── 06_experience_level.png
 │   ├── 07_salary_by_title.png
-│   ├── 08_top_locations.png
-│   └── 09_skills_by_pay.png
+│   └── 08_top_locations.png
 │
 ├── ERD.png                   ← Database entity-relationship diagram
 ├── requirements.txt
@@ -82,7 +81,7 @@ pip install -r requirements.txt
 
 **2. Set your database password**
 
-Open `pipeline.py` and change line 22:
+Open `.env.example`:
 ```python
 DB_PASSWORD = "your_password_here"
 ```
@@ -110,8 +109,6 @@ Charts are saved to `visualizations/`. Key findings print to the terminal.
 | 6 | Job posting type | full-time / remote / contract split |
 | 7 | Avg salary by title | min pay / max pay / range |
 | 8 | Top 10 locations | location + posting count |
-| 9 | Monthly trend 2019 vs 2020 | COVID hiring spike |
-| 10 | Top skills per pay category | top 5 skills per bracket |
 
 Five pre-built views in `sql/views.sql` let you query these directly:
 ```sql
